@@ -5,6 +5,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import moment from 'moment';
 
+const calculateCost = (state) => {
+  const {startTime, endTime, avgSalary, attendeeCount} = state;
+  const secondsWorkedInYear = 52*5*8*60*60;
+  const costPerSecond = avgSalary * attendeeCount / secondsWorkedInYear;
+  const totalSeconds = moment(endTime).diff(startTime, 'seconds');
+  return totalSeconds * costPerSecond;
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -13,12 +21,10 @@ class App extends Component {
       endTime: null,
       avgSalary: 30000,
       attendeeCount: 4,
-      isRunning: false,
     };
   }
 
   handleStart() {
-    console.log('handleStart');
     this.setState({
       endTime: null,
       startTime: new Date(),
@@ -26,22 +32,25 @@ class App extends Component {
   }
 
   handleStop() {
-    console.log('handleStop');
     this.setState({
       endTime: new Date(),
     });
   }
 
   handleReset() {
-    console.log('handleReset');
     this.setState({
       startTime: null,
       endTime: null,
     });
   }
 
+  handleChange(key, e, value) {
+    this.setState({
+      [key]: value,
+    });
+  }
+
   render(props, state) {
-    console.log(props, this.state);
     const {startTime, endTime} = this.state;
     return (
       <MuiThemeProvider>
@@ -49,12 +58,14 @@ class App extends Component {
           <div className="App-header">
             <h2>How much did that meeting cost?</h2>
           </div>
-          {startTime ? moment(startTime).format('HH:mm:ss') : null}
-          {endTime ? moment(endTime).format('HH:mm:ss') : null}
+          {startTime ? moment(startTime).format('HH:mm:ss') : null}<br />
+          {endTime ? moment(endTime).format('HH:mm:ss') : null}<br />
+          {calculateCost(this.state)}<br />
           <Form {...this.state}
             handleStart={this.handleStart.bind(this)}
             handleStop={this.handleStop.bind(this)}
             handleReset={this.handleReset.bind(this)}
+            handleChange={this.handleChange.bind(this)}
           />
         </div>
       </MuiThemeProvider>
@@ -64,10 +75,10 @@ class App extends Component {
 
 export default App;
 
-const Form = ({avgSalary, attendeeCount, handleStart, handleStop, handleReset}) => (
+const Form = ({avgSalary, attendeeCount, handleStart, handleStop, handleReset, handleChange}) => (
   <div>
-    <TextField hintText="Average Salary" defaultValue={avgSalary} /><br />
-    <TextField hintText="Number of attendees" defaultValue={attendeeCount} /><br />
+    <TextField hintText="Average Salary" defaultValue={avgSalary} onChange={handleChange.bind(this,'avgSalary')} /><br />
+    <TextField hintText="Number of attendees" defaultValue={attendeeCount} onChange={handleChange.bind(this,'attendeeCount')} /><br />
     <RaisedButton label="Start" primary={true} onClick={handleStart}/>
     <RaisedButton label="Stop" secondary={true} onClick={handleStop}/>
     <RaisedButton label="Reset" onClick={handleReset}/>
