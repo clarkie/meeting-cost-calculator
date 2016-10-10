@@ -10,7 +10,7 @@ const calculateCost = (state) => {
   const secondsWorkedInYear = 52*5*8*60*60;
   const costPerSecond = avgSalary * attendeeCount / secondsWorkedInYear;
   const totalSeconds = moment(endTime).diff(startTime, 'seconds');
-  return totalSeconds * costPerSecond;
+  return Math.floor(totalSeconds * costPerSecond);
 }
 
 class App extends Component {
@@ -60,7 +60,7 @@ class App extends Component {
           </div>
           {startTime ? moment(startTime).format('HH:mm:ss') : null}<br />
           {endTime ? moment(endTime).format('HH:mm:ss') : null}<br />
-          {calculateCost(this.state)}<br />
+          £{calculateCost(this.state)}<br />
           <Form {...this.state}
             handleStart={this.handleStart.bind(this)}
             handleStop={this.handleStop.bind(this)}
