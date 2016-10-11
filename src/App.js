@@ -10,7 +10,11 @@ const calculateCost = (state) => {
   const secondsWorkedInYear = 52*5*8*60*60;
   const costPerSecond = avgSalary * attendeeCount / secondsWorkedInYear;
   const totalSeconds = moment(endTime).diff(startTime, 'seconds');
-  return Math.floor(totalSeconds * costPerSecond);
+  const totalCost = Math.floor(totalSeconds * costPerSecond);
+  if(isNaN(totalCost)) {
+    return 0;
+  }
+  return totalCost;
 }
 
 class App extends Component {
