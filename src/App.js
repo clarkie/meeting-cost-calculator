@@ -64,7 +64,7 @@ class App extends Component {
           </div>
           {startTime ? moment(startTime).format('HH:mm:ss') : null}<br />
           {endTime ? moment(endTime).format('HH:mm:ss') : null}<br />
-          £{calculateCost(this.state)}<br />
+          Total Cost = £{calculateCost(this.state)}<br />
           <Form {...this.state}
             handleStart={this.handleStart.bind(this)}
             handleStop={this.handleStop.bind(this)}
@@ -81,8 +81,8 @@ export default App;
 
 const Form = ({avgSalary, attendeeCount, handleStart, handleStop, handleReset, handleChange}) => (
   <div>
-    <TextField hintText="Average Salary" defaultValue={avgSalary} onChange={handleChange.bind(this,'avgSalary')} /><br />
-    <TextField hintText="Number of attendees" defaultValue={attendeeCount} onChange={handleChange.bind(this,'attendeeCount')} /><br />
+    <TextField floatingLabelText="Average Salary" defaultValue={avgSalary} onChange={handleChange.bind(this,'avgSalary')} /><br />
+    <TextField floatingLabelText="Number of attendees" defaultValue={attendeeCount} onChange={handleChange.bind(this,'attendeeCount')} /><br />
     <RaisedButton label="Start" primary={true} onClick={handleStart}/>
     <RaisedButton label="Stop" secondary={true} onClick={handleStop}/>
     <RaisedButton label="Reset" onClick={handleReset}/>
