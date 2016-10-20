@@ -3,7 +3,11 @@ import './App.css';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import TimePicker from 'material-ui/TimePicker';
+import DatePicker from 'material-ui/DatePicker';
 import moment from 'moment';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 const calculateCost = (state) => {
   const {startTime, endTime, avgSalary, attendeeCount} = state;
@@ -41,6 +45,18 @@ class App extends Component {
     });
   }
 
+  setStartTime(event, date) {
+    this.setState({
+      startTime: date
+    });
+  }
+
+  setEndTime(event, date) {
+    this.setState({
+      endTime: date
+    });
+  }
+
   handleReset() {
     this.setState({
       startTime: null,
@@ -64,13 +80,18 @@ class App extends Component {
           </div>
           {startTime ? moment(startTime).format('HH:mm:ss') : null}<br />
           {endTime ? moment(endTime).format('HH:mm:ss') : null}<br />
-          £{calculateCost(this.state)}<br />
-          <Form {...this.state}
+          <Form
+            avgSalary={this.state.avgSalary}
+            attendeeCount={this.state.attendeeCount}
             handleStart={this.handleStart.bind(this)}
             handleStop={this.handleStop.bind(this)}
             handleReset={this.handleReset.bind(this)}
             handleChange={this.handleChange.bind(this)}
+            setStartTime={this.setStartTime.bind(this)}
+            setEndTime={this.setEndTime.bind(this)}
           />
+          <br /><br /><br /><br /><br /><br /><br /><br />
+          <h1>Total Cost = £{calculateCost(this.state)}</h1>
         </div>
       </MuiThemeProvider>
     );
@@ -79,12 +100,18 @@ class App extends Component {
 
 export default App;
 
-const Form = ({avgSalary, attendeeCount, handleStart, handleStop, handleReset, handleChange}) => (
+const Form = ({avgSalary, attendeeCount, handleStart, handleStop, handleReset, handleChange, setStartTime, setEndTime}) => (
   <div>
-    <TextField hintText="Average Salary" defaultValue={avgSalary} onChange={handleChange.bind(this,'avgSalary')} /><br />
-    <TextField hintText="Number of attendees" defaultValue={attendeeCount} onChange={handleChange.bind(this,'attendeeCount')} /><br />
+    <TextField floatingLabelText="Average Salary" defaultValue={avgSalary} onChange={handleChange.bind(this,'avgSalary')} /><br />
+    <TextField floatingLabelText="Number of attendees" defaultValue={attendeeCount} onChange={handleChange.bind(this,'attendeeCount')} /><br />
     <RaisedButton label="Start" primary={true} onClick={handleStart}/>
     <RaisedButton label="Stop" secondary={true} onClick={handleStop}/>
+    <RaisedButton label="Reset" onClick={handleReset}/>
+    <br /><br /><br />
+    <TimePicker format="24hr" hintText="Enter Start Time" onChange={setStartTime}/>
+    <TimePicker format="24hr" hintText="Enter End Time" onChange={setEndTime}/>
+    <br />
+    <RaisedButton label="Submit" primary={true} onClick={handleReset}/>
     <RaisedButton label="Reset" onClick={handleReset}/>
   </div>
 )
